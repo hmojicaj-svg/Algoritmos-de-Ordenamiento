@@ -42,12 +42,23 @@ button{font:inherit;color:inherit}
 
 .tarjeta{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sombra)}
 
-/* Reproductor */
-.reproductor{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:16px;align-items:start}
-.escena{position:relative;overflow:hidden;border-radius:var(--r) var(--r) 0 0}
-.escena svg.lienzo{display:block;width:100%;height:auto}
-.escena .modo{position:absolute;top:10px;right:10px}
-.narracion{padding:14px 18px;font-size:16px;line-height:1.45;min-height:72px;display:flex;align-items:center;gap:12px;border-top:1px solid var(--border)}
+/* Escenario del algoritmo: el 3D llena la pantalla y los paneles de vidrio flotan encima. */
+.principal.lleno{padding:0;overflow:hidden;position:relative}
+.escenario{position:relative;height:100%;background:linear-gradient(180deg,var(--acento-bg),var(--bg))}
+.fondo3d{position:absolute;inset:0}
+.capa{position:absolute;inset:0;display:grid;grid-template-columns:minmax(0,1fr) 380px;grid-template-rows:auto minmax(0,1fr) auto;gap:16px;padding:18px 22px;pointer-events:none}
+.capa > *{pointer-events:auto}
+.vidrio{background:rgb(255 255 255 / .74);backdrop-filter:blur(14px) saturate(1.2);border:1px solid rgb(255 255 255 / .7);border-radius:14px;box-shadow:0 10px 30px rgb(34 38 31 / .12)}
+.capa .cabecera{grid-column:1/-1;margin:0;padding:10px 12px 10px 20px;align-items:center;justify-content:flex-start}
+.capa .cabecera h1{font-size:24px;margin-right:auto}
+.capa .hueco{grid-column:1;grid-row:2;min-height:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.capa .hueco > *{pointer-events:auto}
+.capa .ficha-hueco{grid-row:2/4;align-items:flex-start;overflow:auto}
+.capa .pseudo{grid-column:2;grid-row:2/4;align-self:start;max-height:100%;overflow:auto}
+.capa .panel{grid-column:1;grid-row:3}
+.tecnica{width:100%;max-height:100%;overflow:hidden}
+.tecnica svg.lienzo{display:block;width:100%;height:100%;max-height:calc(100vh - 290px)}
+.narracion{padding:14px 18px;font-size:16px;line-height:1.45;min-height:64px;display:flex;align-items:center;gap:12px}
 .narracion .n{font-variant-numeric:tabular-nums;color:var(--text-3);font-size:13px;white-space:nowrap}
 .controles{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 16px;border-top:1px solid var(--border)}
 .boton{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:36px;min-width:36px;padding:0 12px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface);cursor:pointer;font-weight:500}
@@ -62,7 +73,7 @@ button{font:inherit;color:inherit}
 .contadores{display:flex;gap:16px;font-size:13px;color:var(--text-2);margin-left:auto}
 .contadores b{color:var(--text);font-variant-numeric:tabular-nums}
 
-.pseudo{padding:14px 0;font:12.5px/1.7 var(--mono);position:sticky;top:0}
+.pseudo{padding:14px 0;font:12.5px/1.7 var(--mono)}
 .pseudo h2{font:600 13px var(--font);padding:0 16px 8px;color:var(--text-2)}
 .pseudo ol{list-style:none;margin:0;padding:0;counter-reset:l}
 .pseudo li{counter-increment:l;display:flex;white-space:pre-wrap;padding:0 12px 0 0;border-left:3px solid transparent}

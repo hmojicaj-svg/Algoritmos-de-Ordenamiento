@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { ALGORITMOS, ejecutar, grabar } from '.'
+import { heapSort } from './heapSort'
+import { mergeSort } from './mergeSort'
 import { treeSort } from './treeSort'
 
 const aleatorios = (n: number) => Array.from({ length: n }, () => Math.floor(Math.random() * 1000))
@@ -36,6 +38,13 @@ describe.each(ALGORITMOS)('$nombre', (alg) => {
     const silencio = ejecutar(alg, datos)
     const pasos = grabar(alg, datos)
     expect(pasos.filter((p) => p.accion === 'comparar')).toHaveLength(silencio.comparaciones)
+  })
+})
+
+describe('lo que se ve en pantalla', () => {
+  it.each([heapSort, mergeSort])('$nombre: en cada paso cada personaje aparece una sola vez', (alg) => {
+    const datos = [7, 4, 2, 1, 8, 3, 6, 5, 9]
+    for (const p of grabar(alg, datos)) expect([...p.estado.orden].sort((a, b) => a - b)).toEqual(datos.map((_, i) => i))
   })
 })
 

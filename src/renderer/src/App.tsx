@@ -30,7 +30,7 @@ export default function App() {
           {enlace('comparar', <><ChartLine aria-hidden />Comparar</>)}
           {enlace('glosario', <><BookOpen aria-hidden />Glosario</>)}
         </nav>
-        <main className="principal">
+        <main className={alg ? "principal lleno" : "principal"}>
           {ruta === 'inicio' && <Inicio ir={setRuta} />}
           {alg && <PantallaAlgoritmo key={alg.id} alg={alg} />}
           {ruta === 'comparar' && <Comparar />}

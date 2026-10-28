@@ -21,7 +21,10 @@ function PlacaSimple({ x, ancho, y, activa }: PropsPlaca) {
   return <rect x={x} y={y + 28} width={ancho} height={10} rx={5} fill={activa ? 'var(--acento)' : '#CFC8BA'} opacity={activa ? 0.55 : 1} />
 }
 
-export default function EscenaMezcla({ paso, datos, tema, Figura = Nodo, Placa = PlacaSimple, Fondo }: Props) {
+export const FILAS = { FILA, NUEVA }
+
+// Posiciones (en el lienzo 1000 × 540) de cada id y de las placas. La usan la vista técnica y la escena 3D.
+export function disenoMezcla(paso: Paso<EstadoMezcla>) {
   const { orden, cortes, activo, colocados, resaltados } = paso.estado
   const n = orden.length
   const celda = (ANCHO - 2 * MARGEN - HUECO * Math.max(n - 1, 0)) / Math.max(n, 1)
@@ -44,7 +47,12 @@ export default function EscenaMezcla({ paso, datos, tema, Figura = Nodo, Placa =
   const fin = paso.accion === 'fin'
   const tono = (id: number, p: number): Tono =>
     fin ? 'listo' : resaltados.includes(id) ? 'resaltado' : enNueva(p) ? 'activo' : 'normal'
+  const lugares = orden.map((id, p) => ({ id, x: x(p), y: enNueva(p) ? NUEVA : FILA, tono: tono(id, p) }))
+  return { lugares, placas, celda }
+}
 
+export default function EscenaMezcla({ paso, datos, tema, Figura = Nodo, Placa = PlacaSimple, Fondo }: Props) {
+  const { lugares, placas } = disenoMezcla(paso)
   return (
     <svg className="lienzo" viewBox={`0 0 ${ANCHO} ${ALTO}`} role="img" aria-label="Grupos que se dividen y se mezclan">
       {Fondo && <Fondo />}
@@ -55,8 +63,8 @@ export default function EscenaMezcla({ paso, datos, tema, Figura = Nodo, Placa =
           <Texto x={MARGEN} y={NUEVA - 60}>Mezcla en curso</Texto>
         </>
       )}
-      {orden.map((id, p) => (
-        <Movil key={id} x={x(p)} y={enNueva(p) ? NUEVA : FILA}><Figura valor={datos[id]} tono={tono(id, p)} /></Movil>
+      {lugares.map(({ id, x, y, tono }) => (
+        <Movil key={id} x={x} y={y}><Figura valor={datos[id]} tono={tono} /></Movil>
       ))}
     </svg>
   )

@@ -90,6 +90,8 @@ export const mergeSort: Algoritmo<EstadoMezcla> = {
         A[mezcla.k++] = id
         c.movimientos++
       }
+      mezcla.i = L.length // ya están en A: que la vista no los muestre otra vez
+      mezcla.j = R.length
       cortes.delete(medio + 1)
       resaltados = sobran
       if (animar) yield paso(18, 'colocar', sobran.length ? `Los que sobran (${sobran.map((id) => datos[id]).join(', ')}) ya estaban en orden: pasan directo.` : 'No sobra nadie.')
