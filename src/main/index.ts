@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, shell } from 'electron'
 import { join } from 'node:path'
 
 // Sin preload ni IPC: todo el aplicativo vive en el renderer.
@@ -12,7 +12,11 @@ function crearVentana(): void {
     ventana.maximize()
     ventana.show()
   })
-  ventana.webContents.setWindowOpenHandler(() => ({ action: 'deny' }))
+  // Los enlaces a las fuentes se abren en el navegador; nada más sale de la app.
+  ventana.webContents.setWindowOpenHandler(({ url }) => {
+    if (url.startsWith('https://')) shell.openExternal(url)
+    return { action: 'deny' }
+  })
   ventana.webContents.on('will-navigate', (e) => e.preventDefault())
   if (process.env.ELECTRON_RENDERER_URL) ventana.loadURL(process.env.ELECTRON_RENDERER_URL)
   else ventana.loadFile(join(__dirname, '../renderer/index.html'))

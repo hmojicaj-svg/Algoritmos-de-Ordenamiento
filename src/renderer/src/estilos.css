@@ -81,7 +81,15 @@ button{font:inherit;color:inherit}
 .pseudo li.activa{background:var(--resaltado-bg);border-left-color:var(--resaltado);font-weight:600}
 
 /* Fichas y textos */
-.ficha{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:start}
+.capa .ficha-hueco{grid-column:1/-1}
+.ficha{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;align-items:start;width:100%;max-width:1240px;padding-bottom:8px}
+.ficha .resumen{font-size:18px;line-height:1.5;font-weight:500}
+.ficha .etiquetas{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.ficha .pasos{margin:0;padding-left:22px}
+.ficha .pasos li + li{margin-top:6px}
+.ficha .dos{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.ficha .curiosidad{background:var(--acento-bg);border-radius:0 0 14px 14px}
+.ficha a{color:var(--acento);word-break:break-all}
 .bloque{padding:22px 24px}
 .bloque + .bloque{border-top:1px solid var(--border)}
 .bloque h2{font-size:18px;margin-bottom:10px}
@@ -91,7 +99,7 @@ button{font:inherit;color:inherit}
 table.bigo{width:100%;border-collapse:collapse;font-size:14px}
 table.bigo th,table.bigo td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border)}
 table.bigo th{color:var(--text-2);font-weight:500}
-table.bigo td.o{font:600 14px var(--mono)}
+table.bigo td.o{font:600 14px var(--mono);white-space:nowrap}
 .etiqueta{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;background:var(--acento-bg);color:var(--acento)}
 .fuentes{font-size:13px;color:var(--text-3)}
 
