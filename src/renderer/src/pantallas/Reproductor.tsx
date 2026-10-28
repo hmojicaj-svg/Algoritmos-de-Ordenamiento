@@ -6,6 +6,8 @@ import type { Tema } from '../escenas/comun'
 import EscenaArbol from '../escenas/EscenaArbol'
 import EscenaMezcla from '../escenas/EscenaMezcla'
 import EscenaMonticulo from '../escenas/EscenaMonticulo'
+import { FondoArbol, Pajaro } from '../escenas/Pajaros'
+import { FondoMar, PlacaHielo, Pinguino } from '../escenas/Pinguinos'
 
 const EJEMPLO = '7, 4, 2, 1, 8, 3, 6, 5'
 const MAX = 15
@@ -30,7 +32,7 @@ export default function Reproductor({ alg }: { alg: Algoritmo<unknown> }) {
   const [i, setI] = useState(0)
   const [jugando, setJugando] = useState(false)
   const [velocidad, setVelocidad] = useState(1)
-  const [tema, setTema] = useState<Tema>('tecnica')
+  const [tema, setTema] = useState<Tema>('personajes')
 
   const usar = (t: string) => {
     setTexto(t)
@@ -62,18 +64,22 @@ export default function Reproductor({ alg }: { alg: Algoritmo<unknown> }) {
   }
 
   // El paso es de un tipo distinto por algoritmo; cada escena sabe leer el suyo.
-  const comun = { datos, tema, paso: paso as never }
+  const personajes = tema === 'personajes' && alg.id !== 'heap'
+  const comun = { datos, tema: personajes ? tema : 'tecnica' as Tema, paso: paso as never }
   return (
     <div className="reproductor" onKeyDown={teclas}>
       <section className="tarjeta" aria-label="Animación">
-        <div className="escena" style={{ background: tema === 'tecnica' ? 'var(--surface-2)' : undefined }}>
-          {alg.id === 'tree' && <EscenaArbol {...comun} ultimo={pasos.at(-1)!.estado as EstadoArbol} />}
+        <div className="escena" style={{ background: personajes ? undefined : 'var(--surface-2)' }}>
+          {alg.id === 'tree' && <EscenaArbol {...comun} ultimo={pasos.at(-1)!.estado as EstadoArbol} {...(personajes && { Figura: Pajaro, Fondo: FondoArbol })} />}
           {alg.id === 'heap' && <EscenaMonticulo {...comun} />}
-          {alg.id === 'merge' && <EscenaMezcla {...comun} />}
-          <div className="modo pestanas" role="tablist" aria-label="Tipo de vista">
-            <button role="tab" aria-selected={tema === 'personajes'} onClick={() => setTema('personajes')}>Personajes</button>
-            <button role="tab" aria-selected={tema === 'tecnica'} onClick={() => setTema('tecnica')}>Vista técnica</button>
-          </div>
+          {alg.id === 'merge' && <EscenaMezcla {...comun} {...(personajes && { Figura: Pinguino, Placa: PlacaHielo, Fondo: FondoMar })} />}
+          {/* ponytail: Heap Sort aún sin escena con personajes; el selector aparece cuando se elija una. */}
+          {alg.id !== 'heap' && (
+            <div className="modo pestanas" role="tablist" aria-label="Tipo de vista">
+              <button role="tab" aria-selected={personajes} onClick={() => setTema('personajes')}>{alg.id === 'tree' ? 'Pájaros' : 'Pingüinos'}</button>
+              <button role="tab" aria-selected={!personajes} onClick={() => setTema('tecnica')}>Vista técnica</button>
+            </div>
+          )}
         </div>
         <p className="narracion" aria-live="polite"><span className="n">Paso {i + 1} de {pasos.length}</span>{paso.narracion}</p>
         <div className="controles">
