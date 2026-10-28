@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { Algoritmo, Paso } from '../algoritmos'
 import type { EstadoMonticulo } from '../algoritmos/heapSort'
 import type { EstadoMezcla } from '../algoritmos/mergeSort'
@@ -6,7 +6,7 @@ import type { EstadoArbol } from '../algoritmos/treeSort'
 import EscenaCabras3D from '../escenas3d/Cabras3D'
 import EscenaPajaros3D from '../escenas3d/Pajaros3D'
 import EscenaPinguinos3D from '../escenas3d/Pinguinos3D'
-import Ficha from './Ficha'
+import Presentacion from './Presentacion'
 import { Controles, Pseudocodigo, VistaTecnica, useReproductor } from './Reproductor'
 
 const PERSONAJES = { tree: 'Pájaros', heap: 'Cabras', merge: 'Pingüinos' } as const
@@ -14,12 +14,13 @@ const PERSONAJES = { tree: 'Pájaros', heap: 'Cabras', merge: 'Pingüinos' } as 
 // El escenario 3D ocupa toda la pantalla del algoritmo; los paneles flotan encima.
 export default function PantallaAlgoritmo({ alg }: { alg: Algoritmo<unknown> }) {
   const r = useReproductor(alg)
-  const [vista, setVista] = useState<'animacion' | 'ficha'>('animacion')
+  const [vista, setVista] = useState<'animacion' | 'presentacion'>('animacion')
   const [tecnica, setTecnica] = useState(false)
   const comun = { datos: r.datos, duracion: r.duracion }
+  const escenario = useRef<HTMLDivElement>(null)
 
   return (
-    <div className={`escenario ${alg.id}`} onKeyDown={r.teclas}>
+    <div ref={escenario} className={`escenario ${alg.id}`} onKeyDown={vista === 'animacion' ? r.teclas : undefined}>
       <div className="fondo3d" aria-hidden>
         {alg.id === 'tree' && <EscenaPajaros3D {...comun} paso={r.paso as Paso<EstadoArbol>} ultimo={r.pasos.at(-1)!.estado as EstadoArbol} />}
         {alg.id === 'heap' && <EscenaCabras3D {...comun} paso={r.paso as Paso<EstadoMonticulo>} />}
@@ -30,7 +31,7 @@ export default function PantallaAlgoritmo({ alg }: { alg: Algoritmo<unknown> }) 
           <h1>{alg.nombre}</h1>
           <div className="pestanas" role="tablist" aria-label="Contenido">
             <button role="tab" aria-selected={vista === 'animacion'} onClick={() => setVista('animacion')}>Animación</button>
-            <button role="tab" aria-selected={vista === 'ficha'} onClick={() => setVista('ficha')}>Ficha</button>
+            <button role="tab" aria-selected={vista === 'presentacion'} onClick={() => setVista('presentacion')}>Presentación</button>
           </div>
           {vista === 'animacion' && (
             <div className="pestanas" role="tablist" aria-label="Tipo de vista">
@@ -46,7 +47,7 @@ export default function PantallaAlgoritmo({ alg }: { alg: Algoritmo<unknown> }) 
             <Controles r={r} />
           </>
         ) : (
-          <div className="hueco ficha-hueco"><Ficha alg={alg} /></div>
+          <div className="hueco presentacion-hueco"><Presentacion alg={alg} contenedor={escenario} /></div>
         )}
       </div>
     </div>

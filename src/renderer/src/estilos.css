@@ -53,7 +53,6 @@ button{font:inherit;color:inherit}
 .capa .cabecera h1{font-size:24px;margin-right:auto}
 .capa .hueco{grid-column:1;grid-row:2;min-height:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
 .capa .hueco > *{pointer-events:auto}
-.capa .ficha-hueco{grid-row:2/4;align-items:flex-start;overflow:auto}
 .capa .pseudo{grid-column:2;grid-row:2/4;align-self:start;max-height:100%;overflow:auto}
 .capa .panel{grid-column:1;grid-row:3}
 .tecnica{width:100%;max-height:100%;overflow:hidden}
@@ -80,16 +79,7 @@ button{font:inherit;color:inherit}
 .pseudo li::before{content:counter(l);width:34px;text-align:right;padding-right:12px;color:var(--text-3);flex:none}
 .pseudo li.activa{background:var(--resaltado-bg);border-left-color:var(--resaltado);font-weight:600}
 
-/* Fichas y textos */
-.capa .ficha-hueco{grid-column:1/-1}
-.ficha{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;align-items:start;width:100%;max-width:1240px;padding-bottom:8px}
-.ficha .resumen{font-size:18px;line-height:1.5;font-weight:500}
-.ficha .etiquetas{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.ficha .pasos{margin:0;padding-left:22px}
-.ficha .pasos li + li{margin-top:6px}
-.ficha .dos{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.ficha .curiosidad{background:var(--acento-bg);border-radius:0 0 14px 14px}
-.ficha a{color:var(--acento);word-break:break-all}
+/* Textos */
 .bloque{padding:22px 24px}
 .bloque + .bloque{border-top:1px solid var(--border)}
 .bloque h2{font-size:18px;margin-bottom:10px}
@@ -108,23 +98,46 @@ table.bigo td.o{font:600 14px var(--mono);white-space:nowrap}
 .leyenda span{display:inline-flex;align-items:center;gap:8px}
 .leyenda i{width:22px;height:3px;border-radius:2px;display:inline-block}
 
-/* Inicio, Comparar y Glosario */
-.inicio{display:flex;flex-direction:column;gap:16px;max-width:1240px}
-.tarjeta-alg{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:8px;padding:22px 24px;background:var(--surface);border:1px solid var(--border);border-top:4px solid;border-radius:var(--r);box-shadow:var(--sombra);transition:transform .15s ease-out}
-.tarjeta-alg:hover{transform:translateY(-2px)}
-.tarjeta-alg:focus-visible{outline:2px solid var(--text)}
-.tarjeta-alg .personaje{font-size:14px;color:var(--text-2)}
-.tarjeta-alg h2{font-size:22px}
-.tarjeta-alg p{color:var(--text-2)}
-.tarjeta-alg .ir{font-weight:600;margin-top:auto}
-.ayuda{color:var(--text-2);font-size:14px}
+/* Comparar */
 .grafica{padding:18px 20px;max-width:1240px}
 .grafica svg{display:block;width:100%;height:auto;margin-top:8px}
 .rejilla-dos{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;max-width:1240px}
-.glosario{margin:0;padding:8px 24px;max-width:1000px}
-.glosario > div{display:grid;grid-template-columns:240px 1fr;gap:16px;padding:12px 0;border-bottom:1px solid var(--border)}
-.glosario > div:last-child{border-bottom:0}
-.glosario dt{font-weight:650}
-.glosario dd{margin:0;color:var(--text-2)}
 
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+/* Presentación: diapositivas sobre el escenario 3D */
+.nav .separador{height:1px;background:#ffffff1f;margin:14px 10px}
+.capa .presentacion-hueco{grid-column:1/-1;grid-row:2/4;flex-direction:column;gap:14px}
+.presentacion{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;height:100%;min-height:0}
+.diapositiva{width:min(1120px,100%);flex:1;min-height:0;max-height:640px;overflow:auto;padding:44px 56px;display:flex;flex-direction:column;gap:18px;font-size:21px;line-height:1.55;background:rgb(255 255 255 / .84)}
+.diapositiva h2{font-size:40px;line-height:1.1;letter-spacing:-.02em}
+.diapositiva h3{font-size:24px;margin-bottom:6px}
+.diapositiva .algoritmo-nombre{font-size:14px;font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:var(--acento)}
+.diapositiva p + p{margin-top:12px}
+.diapositiva ul,.diapositiva ol{margin:0;padding-left:28px}
+.diapositiva li + li{margin-top:10px}
+.diapositiva .lead{font-size:26px;line-height:1.45;font-weight:500}
+.diapositiva.portada{justify-content:center}
+.diapositiva.portada h2{font-size:72px;color:var(--acento)}
+.diapositiva .etiquetas{display:flex;flex-wrap:wrap;gap:10px}
+.diapositiva .etiqueta{font-size:15px;padding:4px 14px}
+.diapositiva .escena-nombre{color:var(--text-2);font-size:18px}
+.diapositiva .dos{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.diapositiva table.bigo{font-size:19px}
+.diapositiva table.bigo td.o{font-size:20px}
+.diapositiva .codigo{list-style:none;padding:0;font:16px/1.65 var(--mono);counter-reset:l}
+.diapositiva .codigo li{counter-increment:l;white-space:pre-wrap;margin:0}
+.diapositiva .codigo li::before{content:counter(l);display:inline-block;width:34px;text-align:right;margin-right:16px;color:var(--text-3)}
+.diapositiva .fuentes{font-size:17px;color:var(--text-2)}
+.diapositiva a{color:var(--acento);word-break:break-all}
+.barra-diapo{display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:999px}
+.barra-diapo .puntos{display:flex;gap:8px;padding:0 6px}
+.barra-diapo .puntos button{all:unset;cursor:pointer;width:10px;height:10px;border-radius:50%;background:#00000026}
+.barra-diapo .puntos button.activo{background:var(--acento);width:26px;border-radius:999px}
+.barra-diapo .puntos button:focus-visible{outline:2px solid var(--acento);outline-offset:2px}
+.barra-diapo .contador{font-size:14px;color:var(--text-2);min-width:44px;text-align:center}
+.escenario:fullscreen .cabecera{display:none}
+.escenario:fullscreen .capa .presentacion-hueco{grid-row:1/4}
+.escenario:fullscreen .diapositiva{max-height:none}
+.diapositiva .codigo.dos-columnas{columns:2;column-gap:48px}
+.diapositiva .codigo li{break-inside:avoid}

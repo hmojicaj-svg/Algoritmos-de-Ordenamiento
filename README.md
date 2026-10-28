@@ -12,9 +12,9 @@ Cada algoritmo tiene:
 
 - **Animación 3D a pantalla completa**, sincronizada con el **pseudocódigo en español** (la línea que se ejecuta se resalta) y una narración paso a paso. Controles de reproducir, pausar, avanzar, retroceder, velocidad y datos propios.
 - **Vista técnica** con nodos y arreglos en 2D.
-- **Ficha** con historia, cómo funciona, rendimiento en notación Big O, características, ventajas, desventajas y fuentes académicas.
+- **Presentación** en diapositivas sobre la escena 3D: portada, historia, cómo funciona, pseudocódigo, rendimiento en notación Big O, características, ventajas y desventajas, curiosidad y fuentes académicas. Se avanza con las flechas, RePág/AvPág (punteros de presentación) o los botones, y tiene modo de pantalla completa (tecla F).
 
-Además: una **gráfica de líneas** que compara las comparaciones de los tres con datos aleatorios, una página de inicio y un glosario.
+Además: una **gráfica de líneas** que compara las comparaciones de los tres con datos aleatorios.
 
 ## Cómo ejecutarlo
 
@@ -44,7 +44,7 @@ Otros comandos:
 - El **motor** (`src/renderer/src/algoritmos`) implementa cada algoritmo como un generador: animando entrega un paso por acción y en silencio solo cuenta comparaciones. Así la animación, el pseudocódigo, la narración y la gráfica salen del mismo código.
 - Las **pruebas** (Vitest) verifican que los tres ordenan bien en todos los casos, que la animación coincide con el conteo y que Tree Sort con datos ya ordenados hace exactamente n(n−1)/2 comparaciones sin desbordar la pila.
 
-## Fuentes de las fichas
+## Fuentes de la presentación
 
 - J. W. J. Williams. «Algorithm 232: Heapsort». *Communications of the ACM*, 7(6):347–348, 1964.
 - R. W. Floyd. «Algorithm 245: Treesort 3». *Communications of the ACM*, 7(12):701, 1964.
