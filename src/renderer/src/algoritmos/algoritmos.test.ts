@@ -46,6 +46,13 @@ describe('lo que se ve en pantalla', () => {
     const datos = [7, 4, 2, 1, 8, 3, 6, 5, 9]
     for (const p of grabar(alg, datos)) expect([...p.estado.orden].sort((a, b) => a - b)).toEqual(datos.map((_, i) => i))
   })
+
+  it('Heap Sort: el paso que narra un intercambio ya lo muestra hecho', () => {
+    const pasos = grabar(heapSort, [7, 4, 2, 1, 8, 3, 6, 5])
+    pasos.forEach((p, k) => {
+      if (p.accion === 'intercambiar') expect(p.estado.orden).not.toEqual(pasos[k - 1].estado.orden)
+    })
+  })
 })
 
 describe('complejidad', () => {

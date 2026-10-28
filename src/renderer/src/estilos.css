@@ -3,7 +3,7 @@
   color-scheme: light;
   --bg:#F6F4EF; --surface:#FFFFFF; --surface-2:#FBFAF7; --border:#E3DED3; --border-strong:#CFC8BA;
   --text:#22261F; --text-2:#5C6157; --text-3:#6E7368;
-  --nav-bg:#1F2A24; --nav-text:#E8EDE8; --nav-muted:#A9B5AC; --nav-active:#2F3F36;
+  --nav-bg:#000000; --nav-text:#F2F2F2; --nav-muted:#A3A3A3; --nav-active:#232323;
   --tree:#2F7D4F; --tree-bg:#E6F2EA;
   --heap:#B4561F; --heap-bg:#F8EADF;
   --merge:#2A6496; --merge-bg:#E3EEF7;

@@ -88,7 +88,7 @@ export function useTrayecto(objetivo: [number, number, number], duracion: number
     e.ahora.lerpVectors(e.desde, e.hasta, suave(k))
     const arco = k < 1 ? Math.sin(Math.PI * k) * altura(e.desde.distanceTo(e.hasta)) : 0
     g.position.set(e.ahora.x, e.ahora.y + arco, e.ahora.z)
-    return { moviendo: k < 1, k, dx: e.hasta.x - e.desde.x }
+    return { moviendo: k < 1, k, dx: e.hasta.x - e.desde.x, dy: e.hasta.y - e.desde.y }
   }
 }
 

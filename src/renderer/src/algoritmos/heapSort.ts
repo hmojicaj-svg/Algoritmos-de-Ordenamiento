@@ -63,9 +63,11 @@ export const heapSort: Algoritmo<EstadoMonticulo> = {
           resaltados = []
           return
         }
+        // Se intercambia antes de narrarlo: así el salto ocurre justo cuando el texto lo cuenta.
+        const [sube, baja] = [val(mayor), val(i)]
         resaltados = [A[i], A[mayor]]
-        if (animar) yield paso(17, 'intercambiar', `El ${val(mayor)} es mayor que el ${val(i)}: suben y bajan, intercambian su lugar.`)
         intercambiar(i, mayor)
+        if (animar) yield paso(17, 'intercambiar', `El ${sube} es mayor que el ${baja}: el ${sube} sube y el ${baja} baja.`)
         i = mayor
       }
     }
@@ -73,10 +75,11 @@ export const heapSort: Algoritmo<EstadoMonticulo> = {
     if (animar) yield paso(2, 'inicio', 'Primero se arma el montículo: cada padre debe ser mayor que sus hijos.')
     for (let i = Math.floor(n / 2) - 1; i >= 0; i--) yield* hundir(i, n)
     for (let fin = n - 1; fin >= 1; fin--) {
+      const cima = val(0)
       resaltados = [A[0], A[fin]]
-      if (animar) yield paso(6, 'intercambiar', `El ${val(0)} está en la cima: es el mayor que queda y va al final.`)
       intercambiar(0, fin)
       tamano = fin
+      if (animar) yield paso(6, 'intercambiar', `El ${cima} estaba en la cima: es el mayor que queda y baja a su lugar final.`)
       resaltados = []
       yield* hundir(0, fin)
     }

@@ -13,10 +13,12 @@ const NARANJA = '#F2A03D'
 const MADERA = '#7A5232'
 // Altura en el mundo: la fila del cable queda a ras del suelo y la raíz arriba.
 const mundoY = (y: number) => (CABLE + 40 - y) / ESCALA
+const PENDIENTES = 48 // altura (lienzo 2D) de la fila de los que esperan turno
+const ALTO_CABLE = mundoY(PENDIENTES)
 
-interface PropsPajaro { valor: number; tono: Tono; objetivo: [number, number, number]; duracion: number; fase: number }
+interface PropsPajaro { valor: number; tono: Tono; objetivo: [number, number, number]; duracion: number; fase: number; fiesta: boolean }
 
-function Pajaro({ valor, tono, objetivo, duracion, fase }: PropsPajaro) {
+function Pajaro({ valor, tono, objetivo, duracion, fase, fiesta }: PropsPajaro) {
   const raiz = useRef<Group>(null!)
   const cuerpo = useRef<Group>(null!)
   const cabeza = useRef<Group>(null!)
@@ -32,7 +34,7 @@ function Pajaro({ valor, tono, objetivo, duracion, fase }: PropsPajaro) {
     // Revolotea mientras viaja o mientras busca rama (activo).
     const vuela = moviendo || tono === 'activo'
     if (tono === 'activo' && !moviendo && !reducido) raiz.current.position.y += Math.sin(t * 6) * 0.06
-    if (tono === 'listo' && !reducido) raiz.current.position.y += Math.max(0, Math.sin(t * 4 + fase)) * 0.18
+    if (fiesta && !reducido) raiz.current.position.y += Math.max(0, Math.sin(t * 4 + fase)) * 0.18
     const aleteo = vuela ? 0.3 + Math.abs(Math.sin(t * 22)) * 1.1 : 0.1 + (Math.sin(t * 0.9 + fase) > 0.97 ? 0.5 : 0)
     alaI.current.rotation.z = aleteo
     alaD.current.rotation.z = -aleteo
@@ -133,11 +135,24 @@ function Paisaje({ raiz }: { raiz: [number, number] | null }) {
           <cylinderGeometry args={[0.16, 0.32, raiz[1], 14]} />{mat(MADERA, 0.9)}
         </mesh>
       )}
-      {/* Postes y cable donde se posan ya ordenados */}
+      {/* Postes de luz: arriba esperan su turno, abajo quedan los ya ordenados */}
       {[-ancho, ancho].map((x) => (
-        <mesh key={x} position={[x, 0.45, 0]} castShadow><cylinderGeometry args={[0.07, 0.08, 0.9, 10]} />{mat('#8E8A80', 0.8)}</mesh>
+        <group key={x} position-x={x}>
+          <mesh position-y={(ALTO_CABLE + 0.5) / 2} castShadow><cylinderGeometry args={[0.09, 0.12, ALTO_CABLE + 0.5, 10]} />{mat('#6E5236', 0.9)}</mesh>
+          <mesh position-y={ALTO_CABLE + 0.2} castShadow><boxGeometry args={[0.12, 0.1, 1.1]} />{mat('#6E5236', 0.9)}</mesh>
+          {[-0.4, 0.4].map((z) => (
+            <mesh key={z} position={[0, ALTO_CABLE + 0.3, z]}><cylinderGeometry args={[0.05, 0.06, 0.12, 10]} />{mat('#5FA07A', 0.3)}</mesh>
+          ))}
+          <mesh position-y={mundoY(CABLE) + 0.04}><boxGeometry args={[0.1, 0.08, 0.5]} />{mat('#6E5236', 0.9)}</mesh>
+        </group>
       ))}
-      <mesh position={[0, mundoY(CABLE) - 0.01, 0]} rotation-z={Math.PI / 2}><cylinderGeometry args={[0.015, 0.015, ancho * 2, 6]} />{mat('#3A3A36', 0.6)}</mesh>
+      {[mundoY(PENDIENTES), mundoY(CABLE)].map((y) => (
+        <mesh key={y} position={[0, y - 0.01, 0]} rotation-z={Math.PI / 2}><cylinderGeometry args={[0.018, 0.018, ancho * 2, 6]} />{mat('#2E2E2B', 0.5)}</mesh>
+      ))}
+      {/* Cables de fondo que van de poste a poste, para que se lean como tendido eléctrico */}
+      {[-0.4, 0.4].map((z) => (
+        <mesh key={z} position={[0, ALTO_CABLE + 0.36, z]} rotation-z={Math.PI / 2}><cylinderGeometry args={[0.012, 0.012, ancho * 2, 6]} />{mat('#2E2E2B', 0.5)}</mesh>
+      ))}
       {[[-8, 6.5, -12], [7, 7.5, -14], [-1, 8.2, -18]].map(([x, y, z]) => (
         <group key={x} position={[x, y, z]}>
           {[[0, 0, 1], [1, 0.2, 0.8], [-1, 0.1, 0.75], [0.4, 0.6, 0.7]].map(([dx, dy, r], i) => (
@@ -161,7 +176,7 @@ export default function EscenaPajaros3D({ paso, ultimo, datos, duracion }: Props
       {hojas.map((h) => <Follaje key={h.id} x={mundoX(h.x)} y={mundoY(h.y)} />)}
       {ramas.map((r) => <Rama key={r.hijo} desde={v(r.desde)} hasta={v(r.hasta)} />)}
       {lugares.map(({ id, x, y, tono }) => (
-        <Pajaro key={id} valor={datos[id]} tono={tono} duracion={duracion} fase={id * 1.3} objetivo={[mundoX(x), mundoY(y), 0.05]} />
+        <Pajaro key={id} valor={datos[id]} tono={tono} duracion={duracion} fase={id * 1.3} fiesta={paso.accion === 'fin'} objetivo={[mundoX(x), mundoY(y), 0.05]} />
       ))}
     </Mundo>
   )
