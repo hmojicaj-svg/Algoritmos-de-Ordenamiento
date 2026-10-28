@@ -1,1 +1,92 @@
-body{margin:0;font-family:'Inter Variable',system-ui,sans-serif}
+/* Todos los colores salen de estos tokens. Cada algoritmo tiene su color de acento. */
+:root{
+  color-scheme: light;
+  --bg:#F6F4EF; --surface:#FFFFFF; --surface-2:#FBFAF7; --border:#E3DED3; --border-strong:#CFC8BA;
+  --text:#22261F; --text-2:#5C6157; --text-3:#6E7368;
+  --nav-bg:#1F2A24; --nav-text:#E8EDE8; --nav-muted:#A9B5AC; --nav-active:#2F3F36;
+  --tree:#2F7D4F; --tree-bg:#E6F2EA;
+  --heap:#B4561F; --heap-bg:#F8EADF;
+  --merge:#2A6496; --merge-bg:#E3EEF7;
+  --acento:var(--tree); --acento-bg:var(--tree-bg);
+  --resaltado:#E2A93B; --resaltado-bg:#FBF0D9; --listo:#2F7D4F;
+  --font:"Inter Variable","Segoe UI",system-ui,sans-serif;
+  --mono:"Cascadia Code","Consolas",ui-monospace,monospace;
+  --r:10px; --sombra:0 6px 18px rgb(34 38 31 / .08), 0 1px 3px rgb(34 38 31 / .06);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:400 15px/1.55 var(--font)}
+h1,h2,h3,p{margin:0}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--acento);outline-offset:2px}
+
+.app{display:grid;grid-template-columns:232px 1fr;height:100vh;overflow:hidden}
+.nav{background:var(--nav-bg);color:var(--nav-text);padding:24px 14px;display:flex;flex-direction:column;gap:4px;overflow:auto}
+.nav .marca{font-weight:650;font-size:17px;line-height:1.25;padding:0 10px 20px}
+.nav .marca small{display:block;font-weight:400;font-size:12px;color:var(--nav-muted);margin-top:4px}
+.nav .grupo{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--nav-muted);padding:16px 10px 6px}
+.nav button{all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;color:var(--nav-text)}
+.nav button:hover{background:#ffffff10}
+.nav button[aria-current="page"]{background:var(--nav-active);font-weight:600}
+.nav button:focus-visible{outline:2px solid #fff}
+.nav .punto{width:9px;height:9px;border-radius:50%;flex:none}
+.nav svg{width:17px;height:17px;flex:none}
+
+.principal{overflow:auto;padding:28px 36px 40px}
+.cabecera{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:20px}
+.cabecera h1{font-size:28px;line-height:1.15;font-weight:700;letter-spacing:-.015em}
+.cabecera p{color:var(--text-2);margin-top:4px}
+.pestanas{display:inline-flex;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:3px}
+.pestanas button{all:unset;cursor:pointer;padding:6px 16px;border-radius:999px;font-weight:500;color:var(--text-2)}
+.pestanas button[aria-selected="true"]{background:var(--acento);color:#fff}
+.pestanas button:focus-visible{outline:2px solid var(--acento);outline-offset:2px}
+
+.tarjeta{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sombra)}
+
+/* Reproductor */
+.reproductor{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:16px;align-items:start}
+.escena{position:relative;overflow:hidden;border-radius:var(--r) var(--r) 0 0}
+.escena svg.lienzo{display:block;width:100%;height:auto}
+.escena .modo{position:absolute;top:10px;right:10px}
+.narracion{padding:14px 18px;font-size:16px;line-height:1.45;min-height:72px;display:flex;align-items:center;gap:12px;border-top:1px solid var(--border)}
+.narracion .n{font-variant-numeric:tabular-nums;color:var(--text-3);font-size:13px;white-space:nowrap}
+.controles{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 16px;border-top:1px solid var(--border)}
+.boton{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:36px;min-width:36px;padding:0 12px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface);cursor:pointer;font-weight:500}
+.boton:hover{background:var(--surface-2)}
+.boton.primario{background:var(--acento);border-color:var(--acento);color:#fff}
+.boton:disabled{opacity:.45;cursor:default}
+.boton svg{width:17px;height:17px}
+.controles label{display:flex;align-items:center;gap:8px;color:var(--text-2);font-size:13px}
+.controles input[type=range]{accent-color:var(--acento);width:110px}
+.controles input[type=text]{height:36px;border:1px solid var(--border-strong);border-radius:8px;padding:0 10px;font:inherit;width:230px}
+.controles .error{color:#A33E3E;font-size:13px;width:100%}
+.contadores{display:flex;gap:16px;font-size:13px;color:var(--text-2);margin-left:auto}
+.contadores b{color:var(--text);font-variant-numeric:tabular-nums}
+
+.pseudo{padding:14px 0;font:12.5px/1.7 var(--mono);position:sticky;top:0}
+.pseudo h2{font:600 13px var(--font);padding:0 16px 8px;color:var(--text-2)}
+.pseudo ol{list-style:none;margin:0;padding:0;counter-reset:l}
+.pseudo li{counter-increment:l;display:flex;white-space:pre-wrap;padding:0 12px 0 0;border-left:3px solid transparent}
+.pseudo li::before{content:counter(l);width:34px;text-align:right;padding-right:12px;color:var(--text-3);flex:none}
+.pseudo li.activa{background:var(--resaltado-bg);border-left-color:var(--resaltado);font-weight:600}
+
+/* Fichas y textos */
+.ficha{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:start}
+.bloque{padding:22px 24px}
+.bloque + .bloque{border-top:1px solid var(--border)}
+.bloque h2{font-size:18px;margin-bottom:10px}
+.bloque p + p{margin-top:10px}
+.bloque ul{margin:8px 0 0;padding-left:20px}
+.bloque li + li{margin-top:4px}
+table.bigo{width:100%;border-collapse:collapse;font-size:14px}
+table.bigo th,table.bigo td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border)}
+table.bigo th{color:var(--text-2);font-weight:500}
+table.bigo td.o{font:600 14px var(--mono)}
+.etiqueta{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;background:var(--acento-bg);color:var(--acento)}
+.fuentes{font-size:13px;color:var(--text-3)}
+
+.rejilla{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.leyenda{display:flex;gap:18px;flex-wrap:wrap;font-size:14px}
+.leyenda span{display:inline-flex;align-items:center;gap:8px}
+.leyenda i{width:22px;height:3px;border-radius:2px;display:inline-block}
+
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
