@@ -108,4 +108,23 @@ table.bigo td.o{font:600 14px var(--mono);white-space:nowrap}
 .leyenda span{display:inline-flex;align-items:center;gap:8px}
 .leyenda i{width:22px;height:3px;border-radius:2px;display:inline-block}
 
+/* Inicio, Comparar y Glosario */
+.inicio{display:flex;flex-direction:column;gap:16px;max-width:1240px}
+.tarjeta-alg{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:8px;padding:22px 24px;background:var(--surface);border:1px solid var(--border);border-top:4px solid;border-radius:var(--r);box-shadow:var(--sombra);transition:transform .15s ease-out}
+.tarjeta-alg:hover{transform:translateY(-2px)}
+.tarjeta-alg:focus-visible{outline:2px solid var(--text)}
+.tarjeta-alg .personaje{font-size:14px;color:var(--text-2)}
+.tarjeta-alg h2{font-size:22px}
+.tarjeta-alg p{color:var(--text-2)}
+.tarjeta-alg .ir{font-weight:600;margin-top:auto}
+.ayuda{color:var(--text-2);font-size:14px}
+.grafica{padding:18px 20px;max-width:1240px}
+.grafica svg{display:block;width:100%;height:auto;margin-top:8px}
+.rejilla-dos{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;max-width:1240px}
+.glosario{margin:0;padding:8px 24px;max-width:1000px}
+.glosario > div{display:grid;grid-template-columns:240px 1fr;gap:16px;padding:12px 0;border-bottom:1px solid var(--border)}
+.glosario > div:last-child{border-bottom:0}
+.glosario dt{font-weight:650}
+.glosario dd{margin:0;color:var(--text-2)}
+
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
