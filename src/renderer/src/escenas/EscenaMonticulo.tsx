@@ -1,22 +1,13 @@
-import type { ComponentType } from 'react'
 import type { Paso } from '../algoritmos'
 import type { EstadoMonticulo } from '../algoritmos/heapSort'
-import { ALTO, ANCHO, MARGEN, Movil, Nodo, Texto, columna, type Personaje, type Tema, type Tono } from './comun'
-import type { Rama } from './EscenaArbol'
+import { ALTO, ANCHO, MARGEN, Movil, Nodo, Texto, columna, type Tono } from './comun'
 
-interface Props {
-  paso: Paso<EstadoMonticulo>
-  datos: number[]
-  tema: Tema
-  Figura?: Personaje
-  Fondo?: ComponentType<{ enlaces: Rama[] }>
-}
-
-const ARRIBA = 70
-const PODIO = 420 // fila de los ya ordenados
+export const ARRIBA = 70
+export const PODIO = 420 // fila de los ya ordenados
 const TIRA = 492 // el arreglo A, tal como está en memoria
 
-export default function EscenaMonticulo({ paso, datos, tema, Figura = Nodo, Fondo }: Props) {
+// Posiciones (lienzo 1000 × 540) de cada id, de cada cornisa del montículo y de sus enlaces.
+export function disenoMonticulo(paso: Paso<EstadoMonticulo>) {
   const { orden, tamano, resaltados } = paso.estado
   const n = orden.length
   const niveles = Math.floor(Math.log2(Math.max(n, 1))) + 1
@@ -27,24 +18,24 @@ export default function EscenaMonticulo({ paso, datos, tema, Figura = Nodo, Fond
     const ancho = 2 ** nivel
     return { x: MARGEN + ((p - (ancho - 1) + 0.5) / ancho) * (ANCHO - 2 * MARGEN), y: ARRIBA + nivel * alto }
   }
-  const lugar = (p: number) => (p < tamano ? enArbol(p) : { x: columna(p, n), y: PODIO })
-  const enlaces: Rama[] = []
-  for (let p = 1; p < tamano; p++) {
-    const a = enArbol((p - 1) >> 1), b = enArbol(p)
-    enlaces.push([a.x, a.y, b.x, b.y])
-  }
   const fin = paso.accion === 'fin'
   const tono = (id: number, p: number): Tono => (fin || p >= tamano ? 'listo' : resaltados.includes(id) ? 'resaltado' : 'normal')
-  const celda = Math.min(56, (ANCHO - 2 * MARGEN) / Math.max(n, 1) - 6)
+  const lugares = orden.map((id, p) => ({ id, p, ...(p < tamano ? enArbol(p) : { x: columna(p, n), y: PODIO }), tono: tono(id, p) }))
+  const cornisas = orden.map((_, p) => ({ p, ...enArbol(p), usada: p < tamano }))
+  const enlaces = cornisas.slice(1).filter((c) => c.usada).map((c) => ({ p: c.p, desde: enArbol((c.p - 1) >> 1), hasta: enArbol(c.p) }))
+  return { lugares, cornisas, enlaces }
+}
 
+export default function EscenaMonticulo({ paso, datos }: { paso: Paso<EstadoMonticulo>; datos: number[] }) {
+  const { orden, tamano, resaltados } = paso.estado
+  const { lugares, enlaces } = disenoMonticulo(paso)
+  const n = orden.length
+  const celda = Math.min(56, (ANCHO - 2 * MARGEN) / Math.max(n, 1) - 6)
   return (
     <svg className="lienzo" viewBox={`0 0 ${ANCHO} ${ALTO}`} role="img" aria-label="Montículo binario y su arreglo">
-      {Fondo ? <Fondo enlaces={enlaces} /> : enlaces.map(([x1, y1, x2, y2], i) => <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#CFC8BA" strokeWidth={2} />)}
-      {tema === 'tecnica' && <Texto x={MARGEN} y={PODIO - 36}>Ya ordenados (fuera del montículo)</Texto>}
-      {orden.map((id, p) => {
-        const { x, y } = lugar(p)
-        return <Movil key={id} x={x} y={y}><Figura valor={datos[id]} tono={tono(id, p)} /></Movil>
-      })}
+      {enlaces.map(({ p, desde, hasta }) => <line key={p} x1={desde.x} y1={desde.y} x2={hasta.x} y2={hasta.y} stroke="#CFC8BA" strokeWidth={2} />)}
+      <Texto x={MARGEN} y={PODIO - 36}>Ya ordenados (fuera del montículo)</Texto>
+      {lugares.map(({ id, x, y, tono }) => <Movil key={id} x={x} y={y}><Nodo valor={datos[id]} tono={tono} /></Movil>)}
       {/* El montículo no es una estructura aparte: es este mismo arreglo leído como árbol. */}
       {orden.map((id, p) => (
         <g key={p} transform={`translate(${columna(p, n)} ${TIRA})`}>

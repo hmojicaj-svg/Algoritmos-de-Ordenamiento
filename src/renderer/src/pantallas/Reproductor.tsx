@@ -108,7 +108,7 @@ export function Pseudocodigo({ r }: { r: EstadoReproductor }) {
 
 // Vista técnica: nodos y arreglos en 2D, para quien quiera ver el algoritmo en su forma clásica.
 export function VistaTecnica({ r }: { r: EstadoReproductor }) {
-  const comun = { datos: r.datos, tema: 'tecnica' as const, paso: r.paso as never }
+  const comun = { datos: r.datos, paso: r.paso as never }
   return (
     <div className="tecnica vidrio">
       {r.alg.id === 'tree' && <EscenaArbol {...comun} ultimo={r.pasos.at(-1)!.estado as EstadoArbol} />}

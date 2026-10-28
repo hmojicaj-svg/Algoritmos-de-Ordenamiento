@@ -1,23 +1,13 @@
-import type { ComponentType } from 'react'
 import type { Paso } from '../algoritmos'
 import type { EstadoMezcla } from '../algoritmos/mergeSort'
-import { ALTO, ANCHO, MARGEN, Movil, Nodo, Texto, type Personaje, type Tema, type Tono } from './comun'
+import { ALTO, ANCHO, MARGEN, Movil, Nodo, Texto, type Tono } from './comun'
 
 export interface PropsPlaca { x: number; ancho: number; y: number; activa: boolean }
-interface Props {
-  paso: Paso<EstadoMezcla>
-  datos: number[]
-  tema: Tema
-  Figura?: Personaje
-  Placa?: ComponentType<PropsPlaca>
-  Fondo?: ComponentType
-}
-
 const FILA = 200 // grupos partidos
 const NUEVA = 360 // donde se va armando la mezcla
 const HUECO = 18 // separación entre grupos
 
-function PlacaSimple({ x, ancho, y, activa }: PropsPlaca) {
+function Placa({ x, ancho, y, activa }: PropsPlaca) {
   return <rect x={x} y={y + 28} width={ancho} height={10} rx={5} fill={activa ? 'var(--acento)' : '#CFC8BA'} opacity={activa ? 0.55 : 1} />
 }
 
@@ -51,20 +41,15 @@ export function disenoMezcla(paso: Paso<EstadoMezcla>) {
   return { lugares, placas, celda }
 }
 
-export default function EscenaMezcla({ paso, datos, tema, Figura = Nodo, Placa = PlacaSimple, Fondo }: Props) {
+export default function EscenaMezcla({ paso, datos }: { paso: Paso<EstadoMezcla>; datos: number[] }) {
   const { lugares, placas } = disenoMezcla(paso)
   return (
     <svg className="lienzo" viewBox={`0 0 ${ANCHO} ${ALTO}`} role="img" aria-label="Grupos que se dividen y se mezclan">
-      {Fondo && <Fondo />}
       {placas.map((p, i) => <Placa key={`${p.x}-${p.y}-${i}`} {...p} />)}
-      {tema === 'tecnica' && (
-        <>
-          <Texto x={MARGEN} y={FILA - 60}>Grupos divididos</Texto>
-          <Texto x={MARGEN} y={NUEVA - 60}>Mezcla en curso</Texto>
-        </>
-      )}
+      <Texto x={MARGEN} y={FILA - 60}>Grupos divididos</Texto>
+      <Texto x={MARGEN} y={NUEVA - 60}>Mezcla en curso</Texto>
       {lugares.map(({ id, x, y, tono }) => (
-        <Movil key={id} x={x} y={y}><Figura valor={datos[id]} tono={tono} /></Movil>
+        <Movil key={id} x={x} y={y}><Nodo valor={datos[id]} tono={tono} /></Movil>
       ))}
     </svg>
   )

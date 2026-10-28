@@ -1,4 +1,4 @@
-import type { ComponentType, ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { motion } from 'motion/react'
 
 // Lienzo común: todas las escenas dibujan en 1000 × 540 y el SVG escala al ancho disponible.
@@ -8,8 +8,6 @@ export const MARGEN = 40
 
 export type Tono = 'normal' | 'resaltado' | 'activo' | 'listo'
 export interface PropsPersonaje { valor: number; tono: Tono }
-export type Personaje = ComponentType<PropsPersonaje>
-export type Tema = 'personajes' | 'tecnica'
 
 // Centro de la columna `i` de `n` columnas repartidas en el ancho útil.
 export const columna = (i: number, n: number) => MARGEN + ((i + 0.5) * (ANCHO - 2 * MARGEN)) / Math.max(n, 1)

@@ -1,12 +1,12 @@
 import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { RoundedBox } from '@react-three/drei'
-import { Vector3, type Group, type Mesh } from 'three'
+import type { Group } from 'three'
 import type { Paso } from '../algoritmos'
 import type { EstadoMezcla } from '../algoritmos/mergeSort'
 import type { Tono } from '../escenas/comun'
 import { FILAS, disenoMezcla } from '../escenas/EscenaMezcla'
-import { ESCALA, Mundo, mundoX, reducido, suave, texturaNumero } from './Mundo'
+import { Aro, ESCALA, Mundo, mat, mundoX, reducido, texturaNumero, useTrayecto } from './Mundo'
 
 const NEGRO = '#22252B'
 const NARANJA = '#F2A03D'
@@ -23,26 +23,14 @@ function Pinguino({ valor, tono, objetivo, escala, duracion, fase }: PropsPingui
   const alaI = useRef<Group>(null!)
   const alaD = useRef<Group>(null!)
   const ojos = useRef<Group>(null!)
-  const aro = useRef<Mesh>(null!)
-  const m = useRef({ desde: new Vector3(...objetivo), hasta: new Vector3(...objetivo), ahora: new Vector3(...objetivo), t0: -10 })
+  const trayecto = useTrayecto(objetivo, duracion, (d) => Math.min(1.3, 0.35 + d * 0.22))
 
   useFrame(({ clock }) => {
     const t = clock.elapsedTime
-    const e = m.current
-    if (e.hasta.x !== objetivo[0] || e.hasta.z !== objetivo[2]) {
-      e.desde.copy(e.ahora)
-      e.hasta.set(...objetivo)
-      e.t0 = t
-    }
-    const k = reducido ? 1 : Math.min(1, (t - e.t0) / duracion)
-    e.ahora.lerpVectors(e.desde, e.hasta, suave(k))
-    const moviendo = k < 1
-    const distancia = e.desde.distanceTo(e.hasta)
-    const salto = moviendo ? Math.sin(Math.PI * k) * Math.min(1.3, 0.35 + distancia * 0.22) : 0
-    const fiesta = tono === 'listo' && !reducido ? Math.max(0, Math.sin(t * 5 + fase)) * 0.35 : 0
-    raiz.current.position.set(e.ahora.x, e.ahora.y + salto + fiesta, e.ahora.z)
+    const { moviendo, dx } = trayecto(t, raiz.current)
+    if (tono === 'listo' && !reducido) raiz.current.position.y += Math.max(0, Math.sin(t * 5 + fase)) * 0.35
     // Gira hacia donde camina; quieto, mira al frente.
-    const giro = moviendo ? Math.sign(e.hasta.x - e.desde.x) * 0.7 : 0
+    const giro = moviendo ? Math.sign(dx) * 0.7 : 0
     raiz.current.rotation.y += (giro - raiz.current.rotation.y) * 0.15
     // Contoneo al caminar y respiración en reposo.
     cuerpo.current.rotation.z = moviendo ? Math.sin(t * 16) * 0.16 : Math.sin(t * 1.3 + fase) * 0.03
@@ -53,17 +41,11 @@ function Pinguino({ valor, tono, objetivo, escala, duracion, fase }: PropsPingui
     cabeza.current.rotation.x = tono === 'resaltado' ? -0.25 : 0
     // Parpadeo cada pocos segundos, distinto en cada pingüino.
     ojos.current.scale.y = (t + fase) % 4 < 0.12 ? 0.1 : 1
-    aro.current.visible = tono === 'resaltado'
-    aro.current.rotation.z = t * 2
   })
 
-  const mat = (color: string) => <meshStandardMaterial color={color} roughness={0.55} />
   return (
     <group ref={raiz} scale={escala}>
-      <mesh ref={aro} rotation-x={-Math.PI / 2} position-y={0.02}>
-        <torusGeometry args={[0.48, 0.05, 12, 48]} />
-        <meshStandardMaterial color="#FFD45E" emissive="#FFB400" emissiveIntensity={1.4} />
-      </mesh>
+      <Aro visible={tono === 'resaltado'} />
       {[-0.13, 0.13].map((x) => (
         <mesh key={x} position={[x, 0.05, 0.1]} scale={[1, 0.45, 1.5]} castShadow>
           <sphereGeometry args={[0.11, 16, 12]} />{mat(NARANJA)}
