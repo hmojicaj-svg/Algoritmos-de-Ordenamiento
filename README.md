@@ -8,6 +8,20 @@ Aplicativo de escritorio didáctico y comparativo de tres algoritmos de ordenami
 | **Heap Sort** | Cabras que saltan entre las cornisas de una montaña | Montículo binario guardado en el arreglo |
 | **Merge Sort** | Pingüinos sobre placas de hielo que se parten y se unen | Divide y vencerás (árbol de recursión) |
 
+## Capturas
+
+**Tree Sort — pájaros**
+![Tree Sort con pájaros](docs/capturas/tree-sort-pajaros.png)
+
+**Heap Sort — cabras**
+![Heap Sort con cabras](docs/capturas/heap-sort-cabras.png)
+
+**Merge Sort — pingüinos**
+![Merge Sort con pingüinos](docs/capturas/merge-sort-pinguinos.png)
+
+**Presentación en diapositivas**
+![Presentación de Heap Sort](docs/capturas/presentacion.png)
+
 Cada algoritmo tiene:
 
 - **Animación 3D a pantalla completa**, sincronizada con el **pseudocódigo en español** (la línea que se ejecuta se resalta) y una narración paso a paso. Controles de reproducir, pausar, avanzar, retroceder, velocidad y datos propios.
